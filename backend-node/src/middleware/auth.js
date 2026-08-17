@@ -1,0 +1,5 @@
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import { env } from "../config/env.js";
+export async function requireAuth(req, res, next) { try { const token = req.cookies.access_token || (req.headers.authorization || "").replace("Bearer ", ""); if (!token) return res.status(401).json({ detail: "Authentication required" }); const payload = jwt.verify(token, env.jwtSecret); const user = await User.findOne({ _id: payload.sub, active: { $ne: false } }); if (!user) return res.status(401).json({ detail: "User not found or inactive" }); req.user = user; next(); } catch { res.status(401).json({ detail: "Session expired" }); } }
+export const requireRole = (...roles) => (req, res, next) => roles.includes(req.user.role) ? next() : res.status(403).json({ detail: "This role cannot perform that action" });

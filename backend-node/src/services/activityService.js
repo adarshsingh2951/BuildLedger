@@ -1,0 +1,2 @@
+import Activity from "../models/Activity.js";
+export async function logActivity(actor, action, entity, entityId = "", detail = "") { await Activity.create({ actor: actor.name || "System", action, entity, entityId, detail }); }
