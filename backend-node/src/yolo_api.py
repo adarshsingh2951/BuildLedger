@@ -11,10 +11,12 @@ app = FastAPI()
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "best (1).pt")
+MODEL_PATH = os.path.join(BASE_DIR, "best.pt")
 model = YOLO(MODEL_PATH)
 UPLOAD_DIR = os.path.join(BASE_DIR, "../uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+NODE_BACKEND_URL = os.getenv("NODE_BACKEND_URL", "http://localhost:4000")
 
 @app.post("/detect")
 def detect_objects(file: UploadFile = File(...)):
@@ -45,12 +47,13 @@ def detect_objects(file: UploadFile = File(...)):
         return {
             "status": "success",
             "file_id": unique_id,
-            "result_url": f"http://localhost:4000/uploads/res_{unique_id}.jpg",
-            "detections": detections, # Sends: {"brick": 31}
-            "speed": speed_stats      # Sends: {"preprocess": 5.8, "inference": 178.3, ...}
+            "result_url": f"{NODE_BACKEND_URL}/uploads/res_{unique_id}.jpg",
+            "detections": detections, 
+            "speed": speed_stats      
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="127.0.0.1", port=port)
