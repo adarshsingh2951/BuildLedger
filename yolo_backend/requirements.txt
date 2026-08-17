@@ -1,5 +1,9 @@
-fastapi==0.104.1
-uvicorn==0.24.0
-ultralytics==8.0.219
-python-multipart==0.0.6
-Pillow==10.1.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch<2.6.0
+torchvision<0.21.0
+ultralytics
+fastapi
+uvicorn
+python-multipart
+Pillow
+opencv-python-headless
