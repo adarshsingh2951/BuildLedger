@@ -9,8 +9,8 @@ const session = (res, user) => {
   
   res.cookie("access_token", token, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: env.cookieSecure,
+    sameSite: "none",
+    secure: true,
     maxAge: 8 * 60 * 60 * 1000,
   });
   
@@ -52,7 +52,11 @@ export async function login(req, res) {
 }
 
 export function logout(req, res) {
-  res.clearCookie("access_token");
+  res.clearCookie("access_token",{
+    httpOnly: true,
+    sameSite: "none",
+    secure: true
+  });
   res.json({ message: "Signed out" });
 }
 

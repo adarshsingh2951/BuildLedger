@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@/index.css";
 import App from "@/App";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const queryClient = new QueryClient({
   defaultOptions: {
